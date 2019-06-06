@@ -15,38 +15,28 @@
 ## jjj,18
 ##
 ##
-# Guarda cada linea del archivo como elemento de una lista
-file = open('data.csv', 'r').readlines()
+import pandas
+import datetime
+df = pandas.read_csv('data.csv', sep='\t', encoding='latin-1', header=None, parse_dates=[2])
+dfi=[]
+dfi=df[[4]]
+dic=[]
+dic2=[]
+for a in dfi[4]:
+    b = a.split(',')
+    for c in b:
+        dic.append(c.split(':')[0])
+        dic2.append(c.split(':')[-1])
 
-# Quitamos el ultimo caracter de cada elemento
-file = [row[0:-1] for row in file]
+lista = {'A': dic,
+        'B': dic2
+        }
 
-# Separa los caracteres por tabulacion
-file = [row.split('\t') for row in file]
-
-data = []
-i = 0
-for elemt in file:
-	data.append([])
-	for e in elemt:
-		a = e.split(',')
-		if(len(a) == 1):
-			data[i].append(a[0])
-		else:
-			data[i].append(a)
-	i += 1
-
-result = {}
-
-for element in data:
-	for el in element[4]:
-		aux = el.split(':')
-		result[aux[0]] = 0
-
-for element in data:
-	for el in element[4]:
-		aux = el.split(':')
-		result[aux[0]] += 1
-
-for e in result:
-	print(e + ',' + str(result[e]))
+df = pandas.DataFrame(lista,columns= ['A', 'B'])
+df = df.groupby('A').count()
+index = df.index
+valores = df['B'].values
+i=0
+while i < 10:
+    print(index[i] + ',' + str(valores[i]))
+    i=i+1
